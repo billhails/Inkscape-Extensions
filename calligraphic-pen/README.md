@@ -41,11 +41,12 @@ If you have different paths of different widths, and you want to preserve those,
 "use existing stroke width" and it will skip the step where it assigns the nib size
 to the path stroke width.
 
-### Calligraphic Pen Typography Extension
+### Typography Calligraphic Pen Extension
 
-After installation, this can be found in `Extensions>Typography>Calligraphic Pen Typography`
+After installation, this can be found in `Extensions>Typography>Calligraphic Pen`
 
-The dialog box for this extension is identical to the Calligraphic Pen dialog shown above.
+The dialog box for this extension is identical to the Calligraphic Pen dialog shown above,
+except there is no live preview option.
 As mentioned, this is intended to work seamlessly with the "Typography" extension that is
 bundled with Inkscape.
 
@@ -68,13 +69,14 @@ delete any equivalent `GlyphLayer-` layer, then skip to step 2.
 #### TL;DR
 After running the extension you can continue to edit your characters, but now in their
 `Original-GL-` layers. Every time you run it, it will delete then re-create the `GlyphLayer-`
-layers
-and apply the effect, so any changes you make in a `GlyphLayer-` which already has an
-`Original-GL-` will be lost you should consider those `GlyphLayer-` layers as read-only.
+layers and apply the effect, so any changes you make in a `GlyphLayer-` which already has an
+`Original-GL-` will be lost. You should consider those `GlyphLayer-` layers as read-only.
 
 If you want to add more characters later, you can still use the Typography extension
 to create new `GlyphLayer-` layers, or you can create new `Original-GL-` layers manually.
-Either way the extension should be well-behaved.
+Either way the extension should be well-behaved: it will never make changes to an existing
+`Original-GL-` layer and it will never make changes to a `GlyphLayer-` layer without
+first ensuring there is an `Original-GL-` layer for it.
 
 You can also use the Calligraphic Pen effect individually on your `Original-GL-`
 glyphs to see how they will look.

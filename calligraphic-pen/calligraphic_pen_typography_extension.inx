@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
-  <name>Calligraphic Pen Typography</name>
+  <name>Calligraphic Pen</name>
   <id>org.inkscape.typography.calligraphic_pen_extension</id>
   <hbox>
     <param name="nib_size" gui-text="Nib Size (px)" type="float" min="0.0" max="1000">20.0</param>
