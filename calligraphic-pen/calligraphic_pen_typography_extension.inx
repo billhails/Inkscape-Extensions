@@ -9,7 +9,7 @@
   <param name="contrast" gui-text="Contrast %" type="float" min="0" max="99">50.0</param>
   <param name="angle" gui-text="Nib Angle °" type="float" min="0" max="360">45.0</param>
   <label>Convert all Glyph Layers to a calligraphic stroke</label>
-  <effect>
+  <effect needs-live-preview="false">
     <!--object-type>path</object-type-->
     <effects-menu>
       <submenu name="Typography"/>
