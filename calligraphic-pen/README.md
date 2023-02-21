@@ -50,12 +50,12 @@ except there is no live preview option.
 As mentioned, this is intended to work seamlessly with the "Typography" extension that is
 bundled with Inkscape.
 
-To recap, the pre-bundled Typography extension will create separate layers for each character that
+To recap, said pre-bundled Typography extension will create separate layers for each character that
 you want to create, each with a prefix `GlyphLayer-`, so `GlyphLayer-A`, `GlyphLayer-B` etc. You
 start by drawing your characters in those layers.
 
 
-What this Calligraphic Pen Typography Extension does is to:
+What this Typography Calligraphic Pen Extension does is to:
 
 1. rename each of the `GlyphLayer-` layers to equivalent `Original-GL-` layers.
 2. copy those backups back over the `GlyphLayer-` layers. 
@@ -63,8 +63,8 @@ What this Calligraphic Pen Typography Extension does is to:
 uncloning clones and converting objects to paths.
 4. apply the Calligraphic Pen effect to each path in those layers.
 
-If it finds a pre-existing `Original-GL-` layer it will instead assume it has been run before,
-delete any equivalent `GlyphLayer-` layer, then skip to step 2.
+However, if it finds a pre-existing `Original-GL-` layer it will instead assume it has been
+run before, delete any equivalent `GlyphLayer-` layer, then skip to step 2.
 
 #### TL;DR
 After running the extension you can continue to edit your characters, but now in their
@@ -76,7 +76,17 @@ If you want to add more characters later, you can still use the Typography exten
 to create new `GlyphLayer-` layers, or you can create new `Original-GL-` layers manually.
 Either way the extension should be well-behaved: it will never make changes to an existing
 `Original-GL-` layer and it will never make changes to a `GlyphLayer-` layer without
-first ensuring there is an `Original-GL-` layer for it.
+first ensuring there is an `Original-GL-` layer backup of it.
 
-You can also use the Calligraphic Pen effect individually on your `Original-GL-`
+You can also use the standalone Calligraphic Pen effect individually on your `Original-GL-`
 glyphs to see how they will look.
+
+## Acknowledgements
+
+The Typography extension borrows heavily from the "deep ungroup" extension (with modifications).
+There are also lesser borrowings from other extensions.
+The "trick" that the Calligraphy extension uses was taken from a forum post which I can't
+seem to find, but it's not my original idea.
+
+The extension was used to aid the generation of glyphs for my
+[Royston](https://github.com/billhails/Scrawl) font project.
