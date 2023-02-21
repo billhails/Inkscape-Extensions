@@ -87,13 +87,13 @@ class CalligraphicPenTypographyExtension(calligraphic_pen_effect.CalligraphicPen
         layer.getparent().remove(layer)
 
     def backup_glyphlayer(self, suffix, layer):
-        self.message(f"backup_glyphlayer {layer.label}")
+        self.dbg(f"backup_glyphlayer {layer.label}")
         layer.getparent().remove(layer)
         layer.label = f'Original-GL-{suffix}'
         self.document.getroot().append(layer)
 
     def copy_glyphlayer(self, suffix, layer):
-        self.message(f"copy_glyphlayer {layer.label}")
+        self.dbg(f"copy_glyphlayer {layer.label}")
         new_layer = Layer.new(f'GlyphLayer-{suffix}')
         new_layer.set("style", "display:none")
         new_layer.append(layer.copy())
@@ -101,7 +101,7 @@ class CalligraphicPenTypographyExtension(calligraphic_pen_effect.CalligraphicPen
         return new_layer
 
     def perform_inlining(self, layer):
-        self.message(f"perform_inlining {layer.label}")
+        self.dbg(f"perform_inlining {layer.label}")
         self.flatten(layer)
         self.objects_to_paths(layer)
         return layer
@@ -117,30 +117,30 @@ class CalligraphicPenTypographyExtension(calligraphic_pen_effect.CalligraphicPen
             if not isinstance(child, inkex.BaseElement):
                 continue
 
-            self.message(f'_ungroup({self.label(node)}) -> {self.label(child)}')
+            self.dbg(f'_ungroup({self.label(node)}) -> {self.label(child)}')
             child.transform = node.transform @ child.transform
-            self.message(f'_ungroup({self.label(node)}) -> {self.label(child)} after transform')
+            self.dbg(f'_ungroup({self.label(node)}) -> {self.label(child)} after transform')
             node.getparent().insert(list(node.getparent()).index(node), child)
 
         node.getparent().remove(node)
 
     def _ungroup_use(self, use):
-        self.message(f'_ungroup_use({self.label(use)})')
+        self.dbg(f'_ungroup_use({self.label(use)})')
         parent = use.getparent()
         uncloned = use.unlink() # also removes from parent and applies transforms
 
         if isinstance(uncloned, inkex.BaseElement):
-            self.message(f'_ungroup_use({self.label(use)}) processing {self.label(uncloned)}')
+            self.dbg(f'_ungroup_use({self.label(use)}) processing {self.label(uncloned)}')
             parent.append(uncloned)
         else:
-            self.message(f'_ungroup_use({self.label(use)}) skipping {self.label(uncloned)}')
+            self.dbg(f'_ungroup_use({self.label(use)}) skipping {self.label(uncloned)}')
 
         return uncloned
 
     def deep_ungroup(self, node):
         queue = [node]
         while queue:
-            self.message(f'queue {[self.label(x) for x in queue]}')
+            self.dbg(f'queue {[self.label(x) for x in queue]}')
             node = queue.pop()
             if isinstance(node, (NamedView, Defs, Metadata, ForeignObject)):
                 pass
@@ -149,7 +149,7 @@ class CalligraphicPenTypographyExtension(calligraphic_pen_effect.CalligraphicPen
             elif isinstance(node, Group):
                 if list(node):
                     for child in node.iterchildren():
-                        self.message(f'queue.append({self.label(child)})')
+                        self.dbg(f'queue.append({self.label(child)})')
                         queue.append(child)
                 if node.getparent() is not None:
                     self._ungroup(node)

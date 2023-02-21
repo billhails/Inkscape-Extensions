@@ -33,6 +33,8 @@ class CalligraphicPenEffect(inkex.EffectExtension):
 
     NULL_TRANSFORM = Transform([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]])
 
+    debugging = False
+
     def add_arguments(self, pars):
         pars.add_argument("--nib_size", type=float, default=20.0, help="Nib size in pixels")
         pars.add_argument("--ignore_nib_size", type=inkex.Boolean, default=False, help="Do not use nib size")
@@ -49,13 +51,13 @@ class CalligraphicPenEffect(inkex.EffectExtension):
         raise Exception('child class must implenent effect')
 
     def modify_stroke(self, elem, *, nib_size, scale, angle):
-        self.message(f"modify_stroke {elem.get_id()}")
+        self.dbg(f"modify_stroke {elem.get_id()}")
         # transfer the elements transform to its points
         if elem.transform:
             self.transform_points(elem, elem.transform)
             elem.transform = self.NULL_TRANSFORM
         start = self.start_point(elem)
-        self.message(f"modify_stroke {elem.get_id()} start: {start}")
+        self.dbg(f"modify_stroke {elem.get_id()} start: {start}")
         # transform the points of the path, leaving the stroke width unchanged
         self.transform_points(elem, self.stretch_transform(scale, angle))
         # set the stroke_width
@@ -63,7 +65,7 @@ class CalligraphicPenEffect(inkex.EffectExtension):
         # inverse transform the path and stroke
         elem.transform = self.shrink_transform(scale, angle)
         end = self.start_point(elem)
-        self.message(f"modify_stroke {elem.get_id()} end: {end}")
+        self.dbg(f"modify_stroke {elem.get_id()} end: {end}")
 
     def stretch_transform(self, scale=1, angle=0):
         return inkex.Transform(scale=(1 / scale, 1)) @ inkex.Transform(rotate=(-angle,))
@@ -88,10 +90,11 @@ class CalligraphicPenEffect(inkex.EffectExtension):
             p = Path(p).to_absolute().transform(transform)
             elem.set('d', str(Path(CubicSuperPath(p).to_path())))
 
-    def message(self, msg):
-        with open('./callig.log', 'a') as fh:
-            fh.write(f'{datetime.datetime.now()} {msg}\n')
-            fh.close()
+    def dbg(self, msg):
+        if self.debugging:
+            with open('./calligraphic_pen.log', 'a') as fh:
+                fh.write(f'{datetime.datetime.now()} {msg}\n')
+                fh.close()
 
     def label(self, elem):
         name = elem.__class__.__name__

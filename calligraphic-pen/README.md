@@ -1,54 +1,80 @@
 # Calligraphic Pen
 
-Intended for use with the Inkscape Typography extension.
-Non-destructive.
+## Installation
 
-## Intended Operation
+1. Copy all the python (`*.py`) and inkex (`*.inx`) files from this directory to your inkscape user
+extensions directory. You can find this in `Edit>Preferences>System>User EXtensions`.
+2. [Re-]start Inkscape.
 
-### Typography Glyph Layers
+## Description
 
-1. Find all top-level layers with a `GlyphLayer-` prefix.
-2.  Rename them to `Original-GlyphLayer-*`.
-3.  Create a new `GlyphLayer-*` layer.
-4. Copy the contents from the `Original-` layer.
-5. Within the new `GlyphLayer-` layer
-	1. Inline all clones.
-	2. unpack all groups.
-	3. convert objects to paths.
-	4. combine all paths to single path.
-	5. Perform the calligraphic transform(s).
+This package contains two extensions, the second one uses the first.
+The first extension is a simple calligraphic stroke effect with an oval nib
+that is applied to any selected paths.
 
-Exact behaviour depends on the possible pre-existence of an `Original-GlyphLayer-` layer:
+The second is intended to work with the existing Inkscape Typography extension.
+It applies that same calligraphic stroke to all paths, groups and clones in the
+`GlyphLayer-*` layers created by that extension, in a non-destructive manner.
 
-|                                                  | `GlyphLayer-` exists                    | `GlyphLayer-` doesn't exist        |
-|--------------------------------------------------|-----------------------------------------|------------------------------------|
-| `Original-GlyphLayer-` exists                    | delete the `GlyphLayer-`, go to step 3. | go to step 3.                      |
-| `Original-GlyphLayer-` doesn't exist             | go to step 1.                           | N/A                                |
+### Calligraphic Pen Extension
 
-Might be possible to tag the layers somehow, rather than relying on a naming convention (we still use the naming convention though).
+After installation it is found in `Extensions>Calligraphy>Calligraphic Pen`.
 
-### The Calligraphic Transform itself
+To use, first select a path, for example I have this letter "e":
 
-We can keep the transform itself separate from the GlyphLayer manipulations,
-there may be others we can apply later, but for now...
+![unmodified e](./screenshots/unmodified-e.png)
 
-#### Parameters
-* nib width (px, pt etc., optional with a checkbox)
-* contrast (0-100% of stroke width)
-* nib angle (0-360°)
+Open `Extensions>Calligraphy>Calligraphic Pen` and the following dialog box should appear
 
-#### Steps
-* Select the path.
-* Set the stroke width of the path to the specified amount.
-	* optional, we should be allowed to keep pre-existing sizes, in case they vary within a character.
-* Note the absolute position of the first point in the path.
-* Rotate the points of the path by the negation of the specified angle.
-* Scale the points of the path horizontally by the inverse of the specified scale.
-* Scale the path itself horizontally by the specified scale.
-* Rotate the path itself by the positive specified angle.
-* Move the path to restore the absolute position of the first point.
+![dialog 1](./screenshots/dialog-1.png)
 
-Inkscape does some weird stuff when scaling paths and groups on one axis,
-the stroke width of the other axis seems to be also affected. If we can work out
-what it is doing we should be able to counter it. by adjusting stroke widths and
-scaling appropriately.
+With your path selected, you can check the live preview button to see what it will do.
+When you are happy hit Apply. For the settings above, my result looks like this:
+
+![modified e](./screenshots/modified-e.png)
+
+The various parameters are hopefully self-explanatory but here's a picture anyway:
+
+![nib](./screenshots/nib.png)
+
+If you have different paths of different widths, and you want to preserve those, you can check
+"use existing stroke width" and it will skip the step where it assigns the nib size
+to the path stroke width.
+
+### Calligraphic Pen Typography Extension
+
+After installation, this can be found in `Extensions>Typography>Calligraphic Pen Typography`
+
+The dialog box for this extension is identical to the Calligraphic Pen dialog shown above.
+As mentioned, this is intended to work seamlessly with the "Typography" extension that is
+bundled with Inkscape.
+
+To recap, the pre-bundled Typography extension will create separate layers for each character that
+you want to create, each with a prefix `GlyphLayer-`, so `GlyphLayer-A`, `GlyphLayer-B` etc. You
+start by drawing your characters in those layers.
+
+
+What this Calligraphic Pen Typography Extension does is to:
+
+1. rename each of the `GlyphLayer-` layers to equivalent `Original-GL-` layers.
+2. copy those backups back over the `GlyphLayer-` layers. 
+3. inline all the underlying paths in the new `GlyphLayer-` layers, ungrouping groups,
+uncloning clones and converting objects to paths.
+4. apply the Calligraphic Pen effect to each path in those layers.
+
+If it finds a pre-existing `Original-GL-` layer it will instead assume it has been run before,
+delete any equivalent `GlyphLayer-` layer, then skip to step 2.
+
+#### TL;DR
+After running the extension you can continue to edit your characters, but now in their
+`Original-GL-` layers. Every time you run it, it will delete then re-create the `GlyphLayer-`
+layers
+and apply the effect, so any changes you make in a `GlyphLayer-` which already has an
+`Original-GL-` will be lost you should consider those `GlyphLayer-` layers as read-only.
+
+If you want to add more characters later, you can still use the Typography extension
+to create new `GlyphLayer-` layers, or you can create new `Original-GL-` layers manually.
+Either way the extension should be well-behaved.
+
+You can also use the Calligraphic Pen effect individually on your `Original-GL-`
+glyphs to see how they will look.

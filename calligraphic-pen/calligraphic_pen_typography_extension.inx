@@ -6,7 +6,7 @@
     <param name="nib_size" gui-text="Nib Size (px)" type="float" min="0.0" max="1000">20.0</param>
     <param name="ignore_nib_size" gui-text="Use existing stroke width" type="bool">false</param>
   </hbox>
-  <param name="contrast" gui-text="Contrast %" type="float" min="1" max="100">50.0</param>
+  <param name="contrast" gui-text="Contrast %" type="float" min="0" max="99">50.0</param>
   <param name="angle" gui-text="Nib Angle °" type="float" min="0" max="360">45.0</param>
   <label>Convert all Glyph Layers to a calligraphic stroke</label>
   <effect>
