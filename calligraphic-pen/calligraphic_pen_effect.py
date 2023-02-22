@@ -40,17 +40,17 @@ class CalligraphicPenEffect(inkex.EffectExtension):
         pars.add_argument("--ignore_nib_size", type=inkex.Boolean, default=False, help="Do not use nib size")
         pars.add_argument("--contrast", type=float, default=50.0, help="Amount of contrast")
         pars.add_argument("--angle", type=float, default=0.0, help="Nib Angle")
+        pars.add_argument("--units", type=str, default="px", help="Nib Size Units")
 
     def get_args(self):
         scale = 1 - self.options.contrast / 100.0
-        angle = self.options.angle
         nib_size = 0 if self.options.ignore_nib_size else self.options.nib_size
-        return scale, angle, nib_size
+        return scale, self.options.angle, nib_size, self.options.units
 
     def effect(self):
         raise Exception('child class must implenent effect')
 
-    def modify_stroke(self, elem, *, nib_size, scale, angle):
+    def modify_stroke(self, elem, *, nib_size, scale, angle, units):
         self.dbg(f"modify_stroke {elem.get_id()}")
         # transfer the elements transform to its points
         if elem.transform:
@@ -61,7 +61,7 @@ class CalligraphicPenEffect(inkex.EffectExtension):
         # transform the points of the path, leaving the stroke width unchanged
         self.transform_points(elem, self.stretch_transform(scale, angle))
         # set the stroke_width
-        self.set_nib_size(elem, nib_size)
+        self.set_nib_size(elem, nib_size, units)
         # inverse transform the path and stroke
         elem.transform = self.shrink_transform(scale, angle)
         end = self.start_point(elem)
@@ -73,9 +73,9 @@ class CalligraphicPenEffect(inkex.EffectExtension):
     def shrink_transform(self, scale=1, angle=0):
         return inkex.Transform(rotate=(angle,)) @ inkex.Transform(scale=(scale, 1))
 
-    def set_nib_size(self, elem, nib_size):
+    def set_nib_size(self, elem, nib_size, units):
         if nib_size > 0:
-            stroke_width = self.svg.unittouu(f'{nib_size}px')
+            stroke_width = self.svg.unittouu(f'{nib_size}{units}')
             if 'style' in elem.attrib:
                 style = dict(Style.parse_str(elem.attrib.get('style')))
             else:

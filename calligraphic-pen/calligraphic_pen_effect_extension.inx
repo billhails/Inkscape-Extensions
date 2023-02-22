@@ -3,7 +3,15 @@
   <name>Calligraphic Pen</name>
   <id>org.inkscape.calligraphy.calligraphic_pen_extension</id>
   <hbox>
-    <param name="nib_size" gui-text="Nib Size (px)" type="float" min="0.0" max="1000">20.0</param>
+    <param name="nib_size" gui-text="Nib Size" type="float" min="0.0" max="1000">20.0</param>
+    <param name="units" gui-text="" type="optiongroup" appearance="combo">
+        <option value="px">px</option>
+        <option value="cm">cm</option>
+        <option value="in">in</option>
+        <option value="pt">pt</option>
+        <option value="pc">pc</option>
+        <option value="mm">mm</option>
+    </param>
     <param name="ignore_nib_size" gui-text="Use existing stroke width" type="bool">false</param>
   </hbox>
   <param name="contrast" gui-text="Contrast %" type="float" min="0" max="99">50.0</param>

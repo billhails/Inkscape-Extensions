@@ -16,11 +16,12 @@ The second is intended to work with the existing Inkscape Typography extension.
 It applies that same calligraphic stroke to all paths, groups and clones in the
 `GlyphLayer-*` layers created by that extension, in a non-destructive manner.
 
-### Calligraphic Pen Extension
+### 1. Calligraphic Pen Extension
 
 After installation it is found in `Extensions>Calligraphy>Calligraphic Pen`.
 
-To use, first select a path, for example I have this letter "e":
+To use, first select a path (it must be a path, not a group, object or clone),
+for example I have this letter "e":
 
 ![unmodified e](./screenshots/unmodified-e.png)
 
@@ -41,7 +42,7 @@ If you have different paths of different widths, and you want to preserve those,
 "use existing stroke width" and it will skip the step where it assigns the nib size
 to the path stroke width.
 
-### Typography Calligraphic Pen Extension
+### 2. Typography Calligraphic Pen Extension
 
 After installation, this can be found in `Extensions>Typography>Calligraphic Pen`
 
@@ -50,43 +51,25 @@ except there is no live preview option.
 As mentioned, this is intended to work seamlessly with the "Typography" extension that is
 bundled with Inkscape.
 
-To recap, said pre-bundled Typography extension will create separate layers for each character that
+To recap, that pre-bundled Typography extension will create separate layers for each character that
 you want to create, each with a prefix `GlyphLayer-`, so `GlyphLayer-A`, `GlyphLayer-B` etc. You
 start by drawing your characters in those layers.
 
+What this Typography Calligraphic Pen Extension does is, for each `{char}`:
 
-What this Typography Calligraphic Pen Extension does is to:
+1. Rename `GlyphLayer-{char}` to `Original-GL-{char}`.
+2. Copy the `Original-GL-{char}` to `GlyphLayer-{char}`. 
+3. Inline all the underlying paths in `GlyphLayer-{char}`.
+4. Apply the calligraphic pen effect to each path in `GlyphLayer-{char}`.
 
-1. rename each of the `GlyphLayer-` layers to equivalent `Original-GL-` layers.
-2. copy those backups back over the `GlyphLayer-` layers. 
-3. inline all the underlying paths in the new `GlyphLayer-` layers, ungrouping groups,
-uncloning clones and converting objects to paths.
-4. apply the Calligraphic Pen effect to each path in those layers.
-
-However, if it finds a pre-existing `Original-GL-` layer it will instead assume it has been
-run before, delete any equivalent `GlyphLayer-` layer, then skip to step 2.
+However, if there is already an `Original-GL-{char}` layer it will instead assume it has been
+run before, delete any equivalent `GlyphLayer-{char}`, then skip to step 2. Likewise, if there is
+an `Original-GL-{char}` with no `GlyphLayer-{char}`, it just skips to step 2.
 
 #### TL;DR
-After running the extension you can continue to edit your characters, but now in their
-`Original-GL-` layers. Every time you run it, it will delete then re-create the `GlyphLayer-`
-layers and apply the effect, so any changes you make in a `GlyphLayer-` which already has an
-`Original-GL-` will be lost. You should consider those `GlyphLayer-` layers as read-only.
-
-If you want to add more characters later, you can still use the Typography extension
-to create new `GlyphLayer-` layers, or you can create new `Original-GL-` layers manually.
-Either way the extension should be well-behaved: it will never make changes to an existing
-`Original-GL-` layer and it will never make changes to a `GlyphLayer-` layer without
-first ensuring there is an `Original-GL-` layer backup of it.
-
-You can also use the standalone Calligraphic Pen effect individually on your `Original-GL-`
-glyphs to see how they will look.
-
-## Acknowledgements
-
-The Typography extension borrows heavily from the "deep ungroup" extension (with modifications).
-There are also lesser borrowings from other extensions.
-The "trick" that the Calligraphy extension uses was taken from a forum post which I can't
-seem to find, but it's not my original idea.
-
-The extension was used to aid the generation of glyphs for my
-[Royston](https://github.com/billhails/Scrawl) font project.
+You can continue to edit your characters but in their new `Original-GL-` layers.
+You can re-run the extension as many times as you like to update the `GlyphLayer-` layers.
+You can even create more `GlyphLayer-` layers, new ones will be detected and backed up before
+being updated.
+You can use groups, objects and clones in your `Original-GL-` layers, they will be inlined to
+bare paths in the `GlyphLayer-` layers before the effect is applied.

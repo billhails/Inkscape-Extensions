@@ -24,24 +24,16 @@ that will be used subsequently.
 """
 
 import inkex
-import math
-from inkex.paths import CubicSuperPath, Path
 from inkex.transforms import Transform
-from inkex.styles import Style
 from inkex import (
     Group,
-    Anchor,
-    Switch,
     NamedView,
     Defs,
     Metadata,
     ForeignObject,
-    ClipPath,
     Use,
-    SvgDocumentElement,
     Layer,
 )
-import datetime
 
 import calligraphic_pen_effect
 
@@ -56,7 +48,7 @@ class CalligraphicPenTypographyExtension(calligraphic_pen_effect.CalligraphicPen
     """
 
     def effect(self):
-        scale, angle, nib_size = self.get_args()
+        scale, angle, nib_size, units = self.get_args()
         originals = {}
         glyphs = {}
         all_names = {}
@@ -81,7 +73,7 @@ class CalligraphicPenTypographyExtension(calligraphic_pen_effect.CalligraphicPen
             new_layer = self.copy_glyphlayer(name, originals[name])
             new_layer = self.perform_inlining(new_layer)
             for item in new_layer.iterchildren():
-                self.modify_stroke(item, nib_size=nib_size, scale=scale, angle=angle)
+                self.modify_stroke(item, nib_size=nib_size, scale=scale, angle=angle, units=units)
 
     def unlink_glyphlayer(self, layer):
         layer.getparent().remove(layer)
@@ -111,7 +103,6 @@ class CalligraphicPenTypographyExtension(calligraphic_pen_effect.CalligraphicPen
             path = child.to_path_element()
             child.replace_with(path)
 
-    # Flatten a group into same z-order as parent, propagating attribs
     def _ungroup(self, node):
         for child in reversed(list(node)):
             if not isinstance(child, inkex.BaseElement):
@@ -121,6 +112,7 @@ class CalligraphicPenTypographyExtension(calligraphic_pen_effect.CalligraphicPen
             child.transform = node.transform @ child.transform
             self.dbg(f'_ungroup({self.label(node)}) -> {self.label(child)} after transform')
             node.getparent().insert(list(node.getparent()).index(node), child)
+            yield child
 
         node.getparent().remove(node)
 
@@ -142,17 +134,12 @@ class CalligraphicPenTypographyExtension(calligraphic_pen_effect.CalligraphicPen
         while queue:
             self.dbg(f'queue {[self.label(x) for x in queue]}')
             node = queue.pop()
-            if isinstance(node, (NamedView, Defs, Metadata, ForeignObject)):
-                pass
-            elif isinstance(node, Use):
+            if isinstance(node, Use):
                 queue.append(self._ungroup_use(node))
             elif isinstance(node, Group):
-                if list(node):
-                    for child in node.iterchildren():
-                        self.dbg(f'queue.append({self.label(child)})')
-                        queue.append(child)
-                if node.getparent() is not None:
-                    self._ungroup(node)
+                for child in self._ungroup(node):
+                    self.dbg(f'queue.append({self.label(child)})')
+                    queue.append(child)
 
     def flatten(self, group):
         for child in group.iterchildren():

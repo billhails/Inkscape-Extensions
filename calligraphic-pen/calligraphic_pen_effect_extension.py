@@ -29,9 +29,9 @@ class CalligraphicPenEffectExtension(calligraphic_pen_effect.CalligraphicPenEffe
     """Apply a calligraphic stroke to a selected path"""
 
     def effect(self):
-        scale, angle, nib_size = self.get_args()
+        scale, angle, nib_size, units = self.get_args()
         for elem in self.svg.selection.filter(inkex.PathElement):
-            self.modify_stroke(elem, nib_size=nib_size, scale=scale, angle=angle)
+            self.modify_stroke(elem, nib_size=nib_size, scale=scale, angle=angle, units=units)
 
 
 if __name__ == '__main__':
