@@ -4,28 +4,17 @@
 Test elements extra logic from svg xml lxml custom classes.
 """
 
-from inkex.tester import TestCase
-from inkex.tester.inx import InxMixin
+from inkex.tester import TestCase, ComparisonMixin
 
-from my_effect_extension import UnnamedEffectExtension
+from calligraphic_pen_effect_extension import CalligraphicPenEffectExtension
 
 import sys
 sys.path.insert(0, '.')
 
-class UnnamedBasicTestCase(InxMixin, TestCase):
-    """Test INX files and other things"""
-    def test_inx_file(self):
-        """Get all inx files and test each of them"""
-        self.assertInxIsGood("tutorial_01.inx")
-
-    def test_other_things(self):
-        """Things work out"""
-        pass
-
-class UnnamedComparisonsTestCase(ComparisonMixin, TestCase):
+class CalligraphicPenEffectExtensionComparisonsTestCase(ComparisonMixin, TestCase):
     """Test input and output variations"""
-    effect_class = UnnamedEffectExtension
+    effect_class = CalligraphicPenEffectExtension
     comparisons = [
-        ('--my_option=True',),
-        ('--my_option=False',),
+        ('--nib_size=90.0', '--units=px', '--ignore_nib_size=false', '--contrast=50.0', '--angle=45.0', '--test_path_id=path8278')
     ]
+    compare_file = "svg/calligraphic_pen_input.svg"

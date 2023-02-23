@@ -18,7 +18,6 @@ It applies that same calligraphic stroke to all paths, groups and clones in the
 
 ### 1. Calligraphic Pen Extension
 
-After installation it is found in `Extensions>Calligraphy>Calligraphic Pen`.
 
 To use, first select a path (it must be a path, not a group, object or clone),
 for example I have this letter "e":
@@ -44,14 +43,15 @@ to the path stroke width.
 
 ### 2. Typography Calligraphic Pen Extension
 
-After installation, this can be found in `Extensions>Typography>Calligraphic Pen`
+After installation, it can be found in `Extensions>Typography>Calligraphic Pen`.
 
 The dialog box for this extension is identical to the Calligraphic Pen dialog shown above,
 except there is no live preview option.
-As mentioned, this is intended to work seamlessly with the "Typography" extension that is
+As mentioned, this is intended to work with the "Typography" extension that is
 bundled with Inkscape.
 
-To recap, that pre-bundled Typography extension will create separate layers for each character that
+As you'll know if you've used it, that pre-bundled Typography extension will create separate
+layers for each character that
 you want to create, each with a prefix `GlyphLayer-`, so `GlyphLayer-A`, `GlyphLayer-B` etc. You
 start by drawing your characters in those layers.
 
@@ -67,9 +67,9 @@ run before, delete any equivalent `GlyphLayer-{char}`, then skip to step 2. Like
 an `Original-GL-{char}` with no `GlyphLayer-{char}`, it just skips to step 2.
 
 #### TL;DR
-You can continue to edit your characters but in their new `Original-GL-` layers.
-You can re-run the extension as many times as you like to update the `GlyphLayer-` layers.
-You can even create more `GlyphLayer-` layers, new ones will be detected and backed up before
-being updated.
-You can use groups, objects and clones in your `Original-GL-` layers, they will be inlined to
+* You can continue to edit your characters but only in their new `Original-GL-` layers. 
+* You can re-run the extension as many times as you like to update the `GlyphLayer-` layers. 
+* You can create more `GlyphLayer-` layers, new ones will be detected and backed up before
+being updated. 
+* You can use groups, objects and clones in your `Original-GL-` layers, they will be inlined to
 bare paths in the `GlyphLayer-` layers before the effect is applied.

@@ -24,13 +24,17 @@ Apply a calligraphic stroke to a selected path
 import inkex
 import calligraphic_pen_effect
 
+def path_by_id(id):
+    return lambda x: x.id == id
+
 
 class CalligraphicPenEffectExtension(calligraphic_pen_effect.CalligraphicPenEffect):
     """Apply a calligraphic stroke to a selected path"""
 
     def effect(self):
         scale, angle, nib_size, units = self.get_args()
-        for elem in self.svg.selection.filter(inkex.PathElement):
+        selection = self.svg.selection.filter(inkex.PathElement) if self.options.test_path_id == "none" else self.svg.xpath('//*[@id="' + self.options.test_path_id + '"]')
+        for elem in selection:
             self.modify_stroke(elem, nib_size=nib_size, scale=scale, angle=angle, units=units)
 
 
