@@ -69,10 +69,10 @@ class CalligraphicPenEffect(inkex.EffectExtension):
         self.dbg(f"modify_stroke {elem.get_id()} end: {end}")
 
     def stretch_transform(self, scale=1, angle=0):
-        return inkex.Transform(scale=(1 / scale, 1)) * inkex.Transform(rotate=(-angle,))
+        return inkex.Transform(scale=(1 / scale, 1)) @ inkex.Transform(rotate=(-angle,))
 
     def shrink_transform(self, scale=1, angle=0):
-        return inkex.Transform(rotate=(angle,)) * inkex.Transform(scale=(scale, 1))
+        return inkex.Transform(rotate=(angle,)) @ inkex.Transform(scale=(scale, 1))
 
     def set_nib_size(self, elem, nib_size, units):
         if nib_size > 0:
